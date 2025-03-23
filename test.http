@@ -1,0 +1,7 @@
+### Test Chat
+POST http://localhost:4000/chat-gemini/message
+content-type: application/json
+
+{
+  "message": "cómo me llamo?"
+}
