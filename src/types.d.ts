@@ -25,3 +25,15 @@ interface ChatGeminiController {
 interface ChatGeminiService {
   async newMessage: (message: string) => Promise<string>
 }
+
+/**
+ * Embedding Interfaces
+*/
+
+interface EmbeddingGeminiController {
+  async embedText: (req: Request, res: Response) => Promise<void>
+}
+
+interface EmbeddingGeminiService {
+  async embedText: (text: string, documentTitle: string) => Promise<string>
+}

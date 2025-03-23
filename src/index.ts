@@ -1,6 +1,7 @@
 import express from 'express'
 import { config } from 'dotenv'
 import chatGeminiRouter from './routes/chat_gemini.router'
+import embeddingGeminiRouter from './routes/embedding_gemini.router'
 
 config()
 const app = express()
@@ -14,6 +15,7 @@ app.get('/ping', (_req, res) => {
 })
 
 app.use('/chat-gemini', chatGeminiRouter)
+app.use('/embedding-gemini', embeddingGeminiRouter)
 
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`)

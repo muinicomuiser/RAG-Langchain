@@ -18,6 +18,7 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
+    "@google/generative-ai": "0.24.0",
     "@langchain/core": "0.3.42",
     "@langchain/google-genai": "0.1.11",
     "dotenv": "16.4.7",

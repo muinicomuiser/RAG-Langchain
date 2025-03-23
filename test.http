@@ -5,3 +5,12 @@ content-type: application/json
 {
   "message": "cómo me llamo?"
 }
+
+### Test Embedding
+POST http://localhost:4000/embedding-gemini/text
+content-type: application/json
+
+{
+  "documentTitle": "Quien soy",
+  "text": "Soy el desarrollador de este proyecto. Me llamo Nicolás Donoso, tengo 34 años y vivo en Puente Alto, Chile. Es mi primer proyecto autónomo usando LangChain con Typescript y Express."
+}
