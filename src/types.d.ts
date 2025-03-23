@@ -9,3 +9,6 @@
 //   colorFavorito: Color
 // }
 // **el Midudev propone usar interfaces al extender
+
+// Si se agregan enums, ya no puede ser .d.ts <--- Pueden usarse archivos separados para enums.
+// el .d.ts es para definiciones, no se convierte a código js
