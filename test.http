@@ -11,6 +11,31 @@ POST http://localhost:4000/embedding-gemini/text
 content-type: application/json
 
 {
-  "documentTitle": "Quien soy",
-  "text": "Soy el desarrollador de este proyecto. Me llamo Nicolás Donoso, tengo 34 años y vivo en Puente Alto, Chile. Es mi primer proyecto autónomo usando LangChain con Typescript y Express."
+  "collectionName": "sobre_mi",
+  "documentTitle": "Qué veo en la tele",
+  "text": "Antes veía mucho Monk, pero ya lo sacaron de Netflix. Veo mucho anime, estoy viendo Frieren y Gurren Lagan. Ah y uno de una niña que es recepcionista de un gremio fantástico."
 }
+
+### Test Query
+POST http://localhost:4000/embedding-gemini/query
+content-type: application/json
+
+{
+  "collectionName": "sobre_mi",
+  "resultNumber": 1,
+  "query": "cómo fideos, arroz y cosas sin carne?"
+}
+
+### List collections
+GET http://localhost:4000/embedding-gemini/collections
+
+### Test Create Collection
+POST http://localhost:4000/embedding-gemini/collections
+content-type: application/json
+
+{
+  "name": "sobre_mi",
+  "description": "Información sobre mí"
+}
+
+

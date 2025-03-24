@@ -31,9 +31,15 @@ interface ChatGeminiService {
 */
 
 interface EmbeddingGeminiController {
-  async embedText: (req: Request, res: Response) => Promise<void>
+  async embedText: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  async listCollections: (req: Request, res: Response) => Promise<void>
+  async newQuery: (req: Request, res: Response) => Promise<void>
+  async createCollection: (req: Request, res: Response, next: NextFunction) => Promise<void>
 }
 
 interface EmbeddingGeminiService {
-  async embedText: (text: string, documentTitle: string) => Promise<string>
+  async embedText: (text: string, documentTitle: string, collectionName: string) => Promise<string>
+  async listCollections: () => Promise<Array<{ name: string, description: string }>>
+  async newQuery: (query: string, collectionName: string, resultNumber: number) => Promise<Array<Array<string | null>>>
+  async createCollection: (name: string, description: string) => Promise<void>
 }
