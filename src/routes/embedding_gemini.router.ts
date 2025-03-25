@@ -3,8 +3,9 @@ import embeddingGeminiController from '../controllers/embedding_gemini.controlle
 
 const embeddingGeminiRouter = express.Router()
 
-embeddingGeminiRouter.post('/text', embeddingGeminiController.embedText)
 embeddingGeminiRouter.get('/collections', embeddingGeminiController.listCollections)
+embeddingGeminiRouter.get('/collections/:collection/documents', embeddingGeminiController.listDocuments)
+embeddingGeminiRouter.post('/text', embeddingGeminiController.embedText)
 embeddingGeminiRouter.post('/query', embeddingGeminiController.newQuery)
 embeddingGeminiRouter.post('/collections', embeddingGeminiController.createCollection)
 

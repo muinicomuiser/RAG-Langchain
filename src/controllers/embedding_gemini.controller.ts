@@ -15,10 +15,19 @@ const embeddingGeminiController: EmbeddingGeminiController = {
     const list: Array<{ name: string, description: string }> = await embeddingGeminiService.listCollections()
     res.json({ collections: list })
   },
-  async newQuery (req, res): Promise<void> {
-    const { query, collectionName, resultNumber } = req.body
-    const queryResults: Array<Array<string | null>> = await embeddingGeminiService.newQuery(query, collectionName, resultNumber)
-    res.json({ results: queryResults })
+  async listDocuments (req, res, _next) {
+    const { collection } = req.params
+    const list: string[] = await embeddingGeminiService.listDocuments(collection)
+    res.json({ documents: list })
+  },
+  async newQuery (req, res, next): Promise<void> {
+    try {
+      const { query, collectionName, resultNumber } = req.body
+      const queryResults: Array<Array<string | null>> = await embeddingGeminiService.newQuery(query, collectionName, resultNumber)
+      res.json({ results: queryResults })
+    } catch (error) {
+      next(error)
+    }
   },
   async createCollection (req, res, next) {
     try {

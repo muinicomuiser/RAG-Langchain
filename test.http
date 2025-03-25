@@ -12,8 +12,8 @@ content-type: application/json
 
 {
   "collectionName": "sobre_mi",
-  "documentTitle": "Qué veo en la tele",
-  "text": "Antes veía mucho Monk, pero ya lo sacaron de Netflix. Veo mucho anime, estoy viendo Frieren y Gurren Lagan. Ah y uno de una niña que es recepcionista de un gremio fantástico."
+  "documentTitle": "Qué cosas como",
+  "text": "Generalmente como muchas verduras. Soy vegetariano, así que no como carnes de ningún tipo, aunque sí pescado. Me gusta de todo: fideos, arroz, sopas, frutas, verduras. Todo excepto las habas y un par de cosas más. "
 }
 
 ### Test Query
@@ -23,19 +23,22 @@ content-type: application/json
 {
   "collectionName": "sobre_mi",
   "resultNumber": 1,
-  "query": "cómo fideos, arroz y cosas sin carne?"
+  "query": "cómo me llamo?"
 }
 
 ### List collections
 GET http://localhost:4000/embedding-gemini/collections
+
+### List documents
+GET http://localhost:4000/embedding-gemini/collections/sobre_mi/documents
 
 ### Test Create Collection
 POST http://localhost:4000/embedding-gemini/collections
 content-type: application/json
 
 {
-  "name": "sobre_mi",
-  "description": "Información sobre mí"
+  "name": "miaaa",
+  "description": 123
 }
 
 

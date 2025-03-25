@@ -1,6 +1,7 @@
-import { ChromaClient, Collection, GoogleGenerativeAiEmbeddingFunction } from 'chromadb'
+import { ChromaClient, Collection, GoogleGenerativeAiEmbeddingFunction, IncludeEnum } from 'chromadb'
 import { config } from 'dotenv'
-import { EmbeddingGeminiService } from '../types'
+import collectionMapper from '../mappers/collection.mapper'
+import { CustomError, EmbeddingGeminiService } from '../types'
 
 config()
 const chromaClient: ChromaClient = new ChromaClient({ path: process.env.CHROMADB_PATH })
@@ -15,7 +16,6 @@ const embeddingGeminiService: EmbeddingGeminiService = {
   async embedText (text: string, documentTitle: string, collectionName: string): Promise<string> {
     try {
       const collection = await findCollection(collectionName, embedder)
-
       await collection.add({
         ids: [documentTitle],
         documents: [text]
@@ -28,24 +28,44 @@ const embeddingGeminiService: EmbeddingGeminiService = {
 
   /** Get a list of the Collections in the DB */
   async listCollections (): Promise<Array<{ name: string, description: string }>> {
-    const collections = await chromaClient.listCollectionsAndMetadata()
-    return collections.map(collection =>
-      ({
-        name: collection.name,
-        description: (collection.metadata !== undefined) ? ((collection.metadata.description !== undefined) ? collection.metadata.description as string : 'No info') : 'No info'
+    try {
+      const collections = await chromaClient.listCollectionsAndMetadata()
+      return collectionMapper.collectionsToDtoArray(collections as Collection[])
+    } catch (error) {
+      const newError = error as Error
+      const customError: CustomError = { message: newError.message, statusCode: 500, name: newError.name }
+      throw customError
+    }
+  },
+
+  async listDocuments (collectionName: string): Promise<string[]> {
+    try {
+      const collection = await findCollection(collectionName, embedder)
+      const results = await collection.get({
+        include: [IncludeEnum.Documents]
       })
-    )
+      return results.ids
+    } catch (error) {
+      const newError = error as CustomError
+      const customError: CustomError = { message: newError.message, statusCode: newError.statusCode ?? 400, name: newError.name }
+      throw customError
+    }
   },
 
   /** Query in a Collection */
   async newQuery (query: string, collectionName: string, resultNumber: number): Promise<Array<Array<string | null>>> {
-    const collection: Collection = await findCollection(collectionName, embedder)
-    const results = await collection.query({
-      queryTexts: query,
-      nResults: resultNumber
-    })
-    console.log(results)
-    return results.documents
+    try {
+      const collection: Collection = await findCollection(collectionName, embedder)
+      const results = await collection.query({
+        queryTexts: query,
+        nResults: resultNumber
+      })
+      return results.documents
+    } catch (error) {
+      const newError = error as CustomError
+      const customError: CustomError = { message: newError.message, statusCode: newError.statusCode ?? 400, name: newError.name }
+      throw customError
+    }
   },
 
   /** Create a new collection */
@@ -59,7 +79,9 @@ const embeddingGeminiService: EmbeddingGeminiService = {
         }
       })
     } catch (error) {
-      throw new Error((error as Error).message)
+      const newError = error as Error
+      const customError: CustomError = { message: newError.message, statusCode: 400, name: newError.name }
+      throw customError
     }
   }
 }
@@ -69,8 +91,22 @@ async function findCollection (name: string, embeddingFunction: GoogleGenerative
     const collection = await chromaClient.getCollection({ name, embeddingFunction })
     return collection
   } catch (error) {
-    throw new Error('Collection not found')
+    const newError = error as Error
+    const customError: CustomError = { message: 'Collection not found', statusCode: 404, name: newError.name }
+    throw customError
   }
 }
+
+// async function splitTextDocument (path: string): Promise<void> {
+//   try {
+//     const loader = new TextLoader(path)
+//     const documents = await loader.load()
+//     const textSpliter = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 10 })
+//     const splittedText = await textSpliter.splitDocuments(documents)
+//     console.log(splittedText)
+//   } catch (error) {
+//     throw error as Error
+//   }
+// }
 
 export default embeddingGeminiService

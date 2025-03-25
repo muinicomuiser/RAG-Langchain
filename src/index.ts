@@ -2,7 +2,7 @@ import { config } from 'dotenv'
 import express from 'express'
 import chatGeminiRouter from './routes/chat_gemini.router'
 import embeddingGeminiRouter from './routes/embedding_gemini.router'
-import errorHandler from './utils/error_handler.middleware'
+import errorHandler from './middlewares/error_handler.middleware'
 
 config()
 const app = express()
