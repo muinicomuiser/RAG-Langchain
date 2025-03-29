@@ -1,7 +1,7 @@
 import { ChromaClient, Collection, GoogleGenerativeAiEmbeddingFunction, IncludeEnum } from 'chromadb'
 import { config } from 'dotenv'
 import collectionMapper from '../mappers/collection.mapper'
-import { CustomError, EmbeddingGeminiService } from '../types'
+import { CustomError, EmbeddingService } from '../types'
 
 config()
 const chromaClient: ChromaClient = new ChromaClient({ path: process.env.CHROMADB_PATH })
@@ -10,7 +10,7 @@ const embedder = new GoogleGenerativeAiEmbeddingFunction({
   model: process.env.GEMINI_EMBEDDING_MODEL
 })
 /** Expects a body like {text: string, documentTitle: string, collectionName: string} */
-const embeddingGeminiService: EmbeddingGeminiService = {
+const embeddingGeminiService: EmbeddingService = {
 
   /** Embed a text into an existent collection. If the collection don't exists, a new one is created. */
   async embedText (text: string, documentTitle: string, collectionName: string): Promise<string> {

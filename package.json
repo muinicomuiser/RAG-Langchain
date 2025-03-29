@@ -12,17 +12,17 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/express": "^5.0.1",
-    "ts-node-dev": "^2.0.0",
-    "ts-standard": "^12.0.2",
+    "@types/express": "5.0.1",
+    "ts-node-dev": "2.0.0",
+    "ts-standard": "12.0.2",
     "typescript": "5.8.2"
   },
   "dependencies": {
     "@google/generative-ai": "0.24.0",
-    "@langchain/community": "^0.3.36",
+    "@langchain/community": "0.3.36",
     "@langchain/core": "0.3.42",
     "@langchain/google-genai": "0.1.11",
-    "chromadb": "^2.0.1",
+    "chromadb": "2.0.1",
     "dotenv": "16.4.7",
     "express": "4.21.2",
     "langchain": "0.3.19"

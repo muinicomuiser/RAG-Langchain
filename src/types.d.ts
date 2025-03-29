@@ -19,11 +19,11 @@ import { NextFunction, Request, Response } from 'express'
 /**
  * Chat Interfaces
 */
-interface ChatGeminiController {
+interface ChatController {
   async newMessage: (req: Request, res: Response) => Promise<void>
 }
 
-interface ChatGeminiService {
+interface ChatService {
   async newMessage: (message: string) => Promise<string>
 }
 
@@ -31,7 +31,7 @@ interface ChatGeminiService {
  * Embedding Interfaces
 */
 
-interface EmbeddingGeminiController {
+interface EmbeddingController {
   async embedText: (req: Request, res: Response, next: NextFunction) => Promise<void>
   async listCollections: (req: Request, res: Response) => Promise<void>
   async newQuery: (req: Request, res: Response, next: NextFunction) => Promise<void>
@@ -39,7 +39,7 @@ interface EmbeddingGeminiController {
   async listDocuments: (req: Request, res: Response, next: NextFunction) => Promise<void>
 }
 
-interface EmbeddingGeminiService {
+interface EmbeddingService {
   async embedText: (text: string, documentTitle: string, collectionName: string) => Promise<string>
   async listCollections: () => Promise<Array<{ name: string, description: string }>>
   async newQuery: (query: string, collectionName: string, resultNumber: number) => Promise<Array<Array<string | null>>>

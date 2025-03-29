@@ -1,8 +1,8 @@
 import { NextFunction } from 'express'
 import embeddingGeminiService from '../services/embedding_gemini.service'
-import { EmbeddingGeminiController } from '../types'
+import { EmbeddingController } from '../types'
 
-const embeddingGeminiController: EmbeddingGeminiController = {
+const embeddingGeminiController: EmbeddingController = {
   async embedText (req, res, next: NextFunction): Promise<void> {
     try {
       const response: string = await embeddingGeminiService.embedText(req.body.text, req.body.documentTitle, req.body.collectionName)
