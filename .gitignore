@@ -3,4 +3,4 @@ build
 .env
 chroma-data
 apuntesnico.*
-.http
+*.http
