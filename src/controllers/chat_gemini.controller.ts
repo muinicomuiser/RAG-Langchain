@@ -1,11 +1,15 @@
-import { Request, Response } from 'express'
-import { ChatController } from '../types'
 import chatGeminiService from '../services/chat_gemini.service'
+import { ChatController } from '../types'
 
 const chatGeminiController: ChatController = {
-  async newMessage (req: Request, res: Response): Promise<void> {
-    const response: string = await chatGeminiService.newMessage(req.body.message)
-    res.json({ message: response })
+  async newMessage (req, res, next) {
+    try {
+      const { message } = req.body
+      const response = await chatGeminiService.newMessage(message)
+      res.json({ message: response })
+    } catch (error) {
+      next(error)
+    }
   }
 }
 

@@ -1,29 +1,45 @@
-import { NextFunction } from 'express'
 import embeddingGeminiService from '../services/embedding_gemini.service'
 import { EmbeddingController } from '../types'
 
 const embeddingGeminiController: EmbeddingController = {
-  async embedText (req, res, next: NextFunction): Promise<void> {
+  async embedText (req, res, next) {
     try {
-      const response: string = await embeddingGeminiService.embedText(req.body.text, req.body.documentTitle, req.body.collectionName)
+      const { text, documentTitle, collectionName } = req.body
+      const response = await embeddingGeminiService.embedText(
+        text,
+        documentTitle,
+        collectionName
+      )
       res.status(201).json({ message: response })
     } catch (error) {
       next(error)
     }
   },
-  async listCollections (_req, res): Promise<void> {
-    const list: Array<{ name: string, description: string }> = await embeddingGeminiService.listCollections()
-    res.json({ collections: list })
+  async listCollections (_req, res, next) {
+    try {
+      const list = await embeddingGeminiService.listCollections()
+      res.json({ collections: list })
+    } catch (error) {
+      next(error)
+    }
   },
-  async listDocuments (req, res, _next) {
-    const { collection } = req.params
-    const list: string[] = await embeddingGeminiService.listDocuments(collection)
-    res.json({ documents: list })
+  async listDocuments (req, res, next) {
+    try {
+      const { collection } = req.params
+      const list = await embeddingGeminiService.listDocuments(collection)
+      res.json({ documents: list })
+    } catch (error) {
+      next(error)
+    }
   },
-  async newQuery (req, res, next): Promise<void> {
+  async newQuery (req, res, next) {
     try {
       const { query, collectionName, resultNumber } = req.body
-      const queryResults: Array<Array<string | null>> = await embeddingGeminiService.newQuery(query, collectionName, resultNumber)
+      const queryResults = await embeddingGeminiService.newQuery(
+        query,
+        collectionName,
+        resultNumber
+      )
       res.json({ results: queryResults })
     } catch (error) {
       next(error)

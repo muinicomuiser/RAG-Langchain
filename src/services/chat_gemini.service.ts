@@ -1,7 +1,7 @@
-import { AIMessage, AIMessageChunk, HumanMessage } from '@langchain/core/messages'
+import { AIMessage, HumanMessage } from '@langchain/core/messages'
+import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 import { config } from 'dotenv'
 import { ChatService } from '../types'
-import { ChatGoogleGenerativeAI } from '@langchain/google-genai'
 
 config()
 
@@ -13,11 +13,11 @@ const model = new ChatGoogleGenerativeAI({
 })
 
 const chatGeminiService: ChatService = {
-  async newMessage (message: string): Promise<string> {
-    const humanMessage: HumanMessage = new HumanMessage(message)
+  async newMessage (message) {
+    const humanMessage = new HumanMessage(message)
     conversation.push(humanMessage)
-    const response: AIMessageChunk = await model.invoke(conversation)
-    const aiMessage: AIMessage = new AIMessage(String(response.content))
+    const response = await model.invoke(conversation)
+    const aiMessage = new AIMessage(String(response.content))
     conversation.push(aiMessage)
 
     const totalTokens = response.usage_metadata?.total_tokens

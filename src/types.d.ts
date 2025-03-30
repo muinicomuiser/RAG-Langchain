@@ -20,7 +20,7 @@ import { NextFunction, Request, Response } from 'express'
  * Chat Interfaces
 */
 interface ChatController {
-  async newMessage: (req: Request, res: Response) => Promise<void>
+  async newMessage: (req: Request, res: Response, next: NextFunction) => Promise<void>
 }
 
 interface ChatService {
@@ -33,18 +33,20 @@ interface ChatService {
 
 interface EmbeddingController {
   async embedText: (req: Request, res: Response, next: NextFunction) => Promise<void>
-  async listCollections: (req: Request, res: Response) => Promise<void>
+  async listCollections: (req: Request, res: Response, next: NextFunction) => Promise<void>
   async newQuery: (req: Request, res: Response, next: NextFunction) => Promise<void>
   async createCollection: (req: Request, res: Response, next: NextFunction) => Promise<void>
   async listDocuments: (req: Request, res: Response, next: NextFunction) => Promise<void>
 }
 
 interface EmbeddingService {
+  embedder: GoogleGenerativeAiEmbeddingFunction
   async embedText: (text: string, documentTitle: string, collectionName: string) => Promise<string>
   async listCollections: () => Promise<Array<{ name: string, description: string }>>
   async newQuery: (query: string, collectionName: string, resultNumber: number) => Promise<Array<Array<string | null>>>
   async createCollection: (name: string, description: string) => Promise<void>
   async listDocuments: (collectionName: string) => Promise<string[]>
+  async embedDocument: (filePath: string, chunkSize: number, chunkOverlap: number) => Promise <void>
 }
 
 /** Mappers */
