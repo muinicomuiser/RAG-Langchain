@@ -53,6 +53,15 @@ const embeddingGeminiController: EmbeddingController = {
     } catch (error) {
       next(error)
     }
+  },
+  async embedDocument (req, res, next) {
+    try {
+      const { filePath, chunkSize, chunkOverlap } = req.body
+      await embeddingGeminiService.embedDocument(filePath, chunkSize, chunkOverlap)
+      res.status(201).json({ message: 'Created' })
+    } catch (error) {
+      next(error)
+    }
   }
 }
 

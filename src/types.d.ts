@@ -37,10 +37,11 @@ interface EmbeddingController {
   async newQuery: (req: Request, res: Response, next: NextFunction) => Promise<void>
   async createCollection: (req: Request, res: Response, next: NextFunction) => Promise<void>
   async listDocuments: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  async embedDocument: (req: Request, res: Response, next: NextFunction) => Promise<void>
 }
 
 interface EmbeddingService {
-  embedder: GoogleGenerativeAiEmbeddingFunction
+  // embedder: GoogleGenerativeAiEmbeddingFunction
   async embedText: (text: string, documentTitle: string, collectionName: string) => Promise<string>
   async listCollections: () => Promise<Array<{ name: string, description: string }>>
   async newQuery: (query: string, collectionName: string, resultNumber: number) => Promise<Array<Array<string | null>>>

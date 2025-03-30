@@ -4,22 +4,27 @@ import collectionMapper from '../mappers/collection.mapper'
 import { CustomError, EmbeddingService } from '../types'
 import { TextLoader } from 'langchain/document_loaders/fs/text'
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
+// import { Chroma } from '@langchain/community/vectorstores/chroma'
+// import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai'
+
+// const embedderLangchain = new GoogleGenerativeAIEmbeddings({ apiKey: process.env.GOOGLE_API_KEY, modelName: process.env.GEMINI_EMBEDDING_MODEL })
+// const chromaLangchain = new Chroma(embedderLangchain, {url: process.env.CHROMADB_PATH })
 
 config()
 const chromaClient = new ChromaClient({ path: process.env.CHROMADB_PATH })
+const embedder = new GoogleGenerativeAiEmbeddingFunction({
+  apiKeyEnvVar: 'GOOGLE_API_KEY',
+  model: process.env.GEMINI_EMBEDDING_MODEL
+})
 
 const embeddingGeminiService: EmbeddingService = {
   /** Expects a body like {text: string, documentTitle: string, collectionName: string} */
-  embedder: new GoogleGenerativeAiEmbeddingFunction({
-    apiKeyEnvVar: 'GOOGLE_API_KEY',
-    model: process.env.GEMINI_EMBEDDING_MODEL
-  }),
   /** Embed a text into an existent collection. If the collection don't exists, a new one is created. */
   async embedText (text, documentTitle, collectionName) {
     try {
       const collection = await findCollection(
         collectionName,
-        this.embedder
+        embedder
       )
       await collection.add({
         ids: [documentTitle],
@@ -51,7 +56,7 @@ const embeddingGeminiService: EmbeddingService = {
     try {
       const collection = await findCollection(
         collectionName,
-        this.embedder
+        embedder
       )
       const results = await collection.get({
         include: [IncludeEnum.Documents]
@@ -73,12 +78,18 @@ const embeddingGeminiService: EmbeddingService = {
     try {
       const collection: Collection = await findCollection(
         collectionName,
-        this.embedder
+        embedder
       )
+      // const embedQuery = await embedder.generate([query])
+      // console.log(embedQuery)
       const results = await collection.query({
+        // queryEmbeddings: embedQuery,
         queryTexts: query,
         nResults: resultNumber
+        // whereDocument: { $contains: query }
+        // include: [IncludeEnum.Documents]
       })
+      console.log(results)
       return results.documents
     } catch (error) {
       const newError = error as CustomError
@@ -95,7 +106,7 @@ const embeddingGeminiService: EmbeddingService = {
   async createCollection (name, description) {
     try {
       await chromaClient.createCollection({
-        embeddingFunction: this.embedder,
+        embeddingFunction: embedder,
         name,
         metadata: {
           description
