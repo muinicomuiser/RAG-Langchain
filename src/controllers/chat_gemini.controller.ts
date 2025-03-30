@@ -10,6 +10,15 @@ const chatGeminiController: ChatController = {
     } catch (error) {
       next(error)
     }
+  },
+  async newRagMessage (req, res, next) {
+    try {
+      const { message, collectionName, resultNumber } = req.body
+      const response = await chatGeminiService.newRagMessage(message, collectionName, resultNumber)
+      res.json({ message: response })
+    } catch (error) {
+      next(error)
+    }
   }
 }
 

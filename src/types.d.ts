@@ -21,10 +21,12 @@ import { NextFunction, Request, Response } from 'express'
 */
 interface ChatController {
   async newMessage: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  async newRagMessage: (req: Request, res: Response, next: NextFunction) => Promise<void>
 }
 
 interface ChatService {
   async newMessage: (message: string) => Promise<string>
+  async newRagMessage: (message: string, collectionName: string, resultNumber: number) => Promise<string>
 }
 
 /**
@@ -32,22 +34,29 @@ interface ChatService {
 */
 
 interface EmbeddingController {
-  async embedText: (req: Request, res: Response, next: NextFunction) => Promise<void>
-  async listCollections: (req: Request, res: Response, next: NextFunction) => Promise<void>
   async newQuery: (req: Request, res: Response, next: NextFunction) => Promise<void>
+
   async createCollection: (req: Request, res: Response, next: NextFunction) => Promise<void>
-  async listDocuments: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  async listCollections: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  async deleteCollection: (req: Request, res: Response, next: NextFunction) => Promise<void>
+
+  async embedText: (req: Request, res: Response, next: NextFunction) => Promise<void>
   async embedDocument: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  async listDocuments: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  async deleteDocument: (req: Request, res: Response, next: NextFunction) => Promise<void>
 }
 
 interface EmbeddingService {
-  // embedder: GoogleGenerativeAiEmbeddingFunction
-  async embedText: (text: string, documentTitle: string, collectionName: string) => Promise<string>
-  async listCollections: () => Promise<Array<{ name: string, description: string }>>
-  async newQuery: (query: string, collectionName: string, resultNumber: number) => Promise<Array<Array<string | null>>>
+  async newQuery: (query: string, collectionName: string, resultNumber: number) => Promise<Array<string | null>>
+
   async createCollection: (name: string, description: string) => Promise<void>
+  async listCollections: () => Promise<Array<{ name: string, description: string }>>
+  async deleteCollection: (collectionName: string) => Promise<void>
+
+  async embedText: (text: string, documentTitle: string, collectionName: string) => Promise<string>
+  async embedDocument: (collectionName: string, file: Express.Multer.File, chunkSize: number, chunkOverlap: number) => Promise <void>
   async listDocuments: (collectionName: string) => Promise<string[]>
-  async embedDocument: (filePath: string, chunkSize: number, chunkOverlap: number) => Promise <void>
+  async deleteDocument: (collectionName: string, documentName: string) => Promise <void>
 }
 
 /** Mappers */

@@ -1,10 +1,11 @@
 import express from 'express'
 import embeddingGeminiController from '../controllers/embedding_gemini.controller'
+import multer from 'multer'
 
 const embeddingGeminiRouter = express.Router()
 
 /** Query over a Collection */
-embeddingGeminiRouter.post('/query', embeddingGeminiController.newQuery)
+embeddingGeminiRouter.post('/collections/:collection/query', embeddingGeminiController.newQuery)
 
 /** List Collections */
 embeddingGeminiRouter.get('/collections', embeddingGeminiController.listCollections)
@@ -12,10 +13,14 @@ embeddingGeminiRouter.get('/collections', embeddingGeminiController.listCollecti
 embeddingGeminiRouter.get('/collections/:collection/documents', embeddingGeminiController.listDocuments)
 /** Create a Collection */
 embeddingGeminiRouter.post('/collections', embeddingGeminiController.createCollection)
+/** Delete a collection by its name */
+embeddingGeminiRouter.delete('/collections/:collection', embeddingGeminiController.deleteCollection)
 
 /** Embed Text from the Body */
-embeddingGeminiRouter.post('/embeds/text', embeddingGeminiController.embedText)
+embeddingGeminiRouter.post('/collections/:collection/text', embeddingGeminiController.embedText)
 /** Embed Text from a document */
-embeddingGeminiRouter.post('/embeds/document', embeddingGeminiController.embedDocument)
+embeddingGeminiRouter.post('/collections/:collection/file', multer().single('file'), embeddingGeminiController.embedDocument)
+/** Delete a document in a collection by its name */
+embeddingGeminiRouter.delete('/collections/:collection/documents/:documentName', embeddingGeminiController.deleteDocument)
 
 export default embeddingGeminiRouter
